@@ -9,7 +9,6 @@ public class PlayerController : MonoBehaviour
 
     // Equipment
     // TODO Remember to change these to classes!
-    // TODO It **may** be possible to use structs implementing interfaces instead of class inheritance, which may give performance advantages. Low priority.
     // Not a final list!
     public int primaryWeapon;
     public int secondaryWeapon;
