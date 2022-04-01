@@ -1,10 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 // This class acts as the root parent to all weapon scripts (primary and secondary).
 public class Weapon : MonoBehaviour
 {
+    // Components
+    public GameObject gunBarrel;
+
     // Localize the weapon name
     string nameLoc;
     // How many bullets per one magazine?
@@ -25,8 +29,8 @@ public class Weapon : MonoBehaviour
     // How far can gun hit a target? For raycast weapons, this is the ray length; for projectile weapons, the time until the projectile despawns itself.
     [SerializeField]
     private float range;
-    // How accurate is the gun, in terms of maximum degree of deviation from the line of sight? (I.E. how wide is the cone containing all possible bullet paths?)
-    // 0 corresponds to 100% accuracy
+    // How accurate is the gun, in units of maximum degree of deviation from the line of sight? (I.E. how wide is the cone containing all possible bullet paths?)
+    // 0 corresponds to 100% accuracy, i.e. 0 degrees of deviation
     [SerializeField]
     private float accuracy;
     // How much damage will the bullet do on impact? 
@@ -48,10 +52,24 @@ public class Weapon : MonoBehaviour
     // TODO Each weapon should also store its art assets and fire, reload, and (if unique) "empty clip" sound files in some form.
 
     // Weapon fire logic
-    public virtual void Fire()
+    public virtual void Fire(bool facingRight)
     {
-        // Pick a random angle between { -accuracy < 0 < accuracy }
+        Debug.Log("Firing!");
 
-        // TODO Raytracing magic goes here
+        // Pick a random angle between { -accuracy < 0 < accuracy }
+        float inaccuracyOffset = Random.Range(-Accuracy, Accuracy);
+        Vector2 direction = new Vector2(gunBarrel.transform.right.x, gunBarrel.transform.right.y + inaccuracyOffset) * (facingRight ? 1 : -1);
+
+        // Run the raycast
+        RaycastHit2D hit = Physics2D.Raycast(gunBarrel.transform.position, direction, Range);
+        Debug.DrawRay(gunBarrel.transform.position, direction, Color.blue, 5);
+
+        // If it hits something...
+        if (hit.collider != null)
+        {
+            Debug.Log(hit.point);
+
+            // TODO If it's a character, damage them
+        }
     }
 }

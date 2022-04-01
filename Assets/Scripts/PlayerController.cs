@@ -39,8 +39,9 @@ public class PlayerController : MonoBehaviour
 
     private bool crouching;
 
-    private GameObject currentWeapon;
+    private Weapon currentWeapon;
     private bool firing;
+    private float timeToNextShot;
 
     [SerializeField]
     private bool hasKillstreak;
@@ -72,8 +73,9 @@ public class PlayerController : MonoBehaviour
         crouching = false;
         shouldJump = false;
         grounded = false;
-        currentWeapon = primaryWeapon;
+        currentWeapon = primaryWeapon.GetComponent<Weapon>();
         firing = false;
+        timeToNextShot = 0;
         hasKillstreak = false;
     }
 
@@ -109,6 +111,9 @@ public class PlayerController : MonoBehaviour
         if (Input.GetButtonUp("Fire"))
         {
             firing = false;
+
+            // TODO We want the gun to fire instantly on click, but not to circumvent fire rate by spam clicking.
+            timeToNextShot = 0;
         }
         // If the player pressed fire this frame, then execute firing logic
         else if (Input.GetButtonDown("Fire"))
@@ -129,6 +134,24 @@ public class PlayerController : MonoBehaviour
         }
 
 
+
+        // Fire weapon
+        // TODO handle non-full-auto weapons
+        if (firing)
+        {
+            if (currentWeapon.IsFullAuto)
+            {
+                if (timeToNextShot <= 0)
+                {
+                    currentWeapon.Fire(facingRight);
+                    timeToNextShot = currentWeapon.FireRate;
+                }
+                else
+                {
+                    timeToNextShot -= Time.deltaTime;
+                }
+            }
+        }
 
 
 
