@@ -10,14 +10,14 @@ public class PlayerController : MonoBehaviour
     // Equipment
     // TODO Remember to change these to classes!
     // Not a final list!
-    public int primaryWeapon;
-    public int secondaryWeapon;
-    public int killstreak;
-    public int passive;
+    public GameObject primaryWeapon;
+    public GameObject secondaryWeapon;
+    public GameObject killstreak;
+    public GameObject passive;
     // Slot for a primary-weapon specific gun mod (e.g. expanded clip, laser sight, corrosive rounds, etc)
-    public int primaryMod;
+    public GameObject primaryMod;
     // Idea: slot for a broadly applicable mod (e.g. extra ammo clips, targeting computer, etc)
-    public int equipment;
+    public GameObject equipment;
 
     // Attributes
     public const int MAX_HEALTH = 100;
@@ -44,7 +44,7 @@ public class PlayerController : MonoBehaviour
     float speed;
 
     private const float BASE_SPEED = 10;
-    private const float CROUCH_SLOWDOWN = 0.8f;
+    private const float CROUCH_SLOWDOWN = 0.7f;
     private const float AIR_SLOWDOWN = 0.6f;
     private const float JUMP_STRENGTH = 550f;
 
