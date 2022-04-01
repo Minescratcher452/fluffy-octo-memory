@@ -6,6 +6,8 @@ public class Killstreak : MonoBehaviour
 {
     // Localize name
     string nameLoc;
+    // Number of kills needed to activate
+    int cost;
     // Duration in seconds (0 = instantaneous)
     float duration;
 
