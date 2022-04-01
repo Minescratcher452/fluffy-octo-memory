@@ -46,7 +46,7 @@ public class PlayerController : MonoBehaviour
     private const float BASE_SPEED = 10;
     private const float CROUCH_SLOWDOWN = 0.7f;
     private const float AIR_SLOWDOWN = 0.6f;
-    private const float JUMP_STRENGTH = 550f;
+    private const float JUMP_STRENGTH = 600f;
 
     // Start is called before the first frame update
     void Start()
@@ -126,6 +126,14 @@ public class PlayerController : MonoBehaviour
             Killstreak();
         }
 
+        // If the player pressed Swap Weapons this frame, then swap weapons
+        if (Input.GetButtonDown("Swap Weapons"))
+        {
+            SwapWeapon();
+        }
+
+
+
 
 
         // Update animations
@@ -164,5 +172,10 @@ public class PlayerController : MonoBehaviour
     {
         Debug.Log("Killstreak activated!");
         hasKillstreak = false;
+    }
+
+    private void SwapWeapon()
+    {
+        Debug.Log("Swapped weapons!");
     }
 }
