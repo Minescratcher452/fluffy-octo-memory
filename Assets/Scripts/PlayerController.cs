@@ -29,13 +29,19 @@ public class PlayerController : MonoBehaviour
     public float groundCheckRadius;
     public LayerMask ground;
 
-    private bool crouching;
+    // True for facing right (positive X), false for left (negative X).
+    public bool facingRight;
 
     // True if and only if the player has pressed jump, but the character has not actually jumped yet.
     private bool shouldJump;
+    // True if and only if the player is standing on solid ground.
     private bool grounded;
 
+    private bool crouching;
+
+    private GameObject currentWeapon;
     private bool firing;
+
     [SerializeField]
     private bool hasKillstreak;
 
@@ -62,9 +68,11 @@ public class PlayerController : MonoBehaviour
         health = MAX_HEALTH;
         armor = MAX_ARMOR;
         speed = BASE_SPEED;
+        facingRight = true;
         crouching = false;
         shouldJump = false;
         grounded = false;
+        currentWeapon = primaryWeapon;
         firing = false;
         hasKillstreak = false;
     }
@@ -78,19 +86,7 @@ public class PlayerController : MonoBehaviour
 
         // Take input
         // Update axes
-        horizontalInput = Input.GetAxis("Horizontal");
-
-        // Move the player left or right based on input and walk speed (move slower if crouching or in air)
-        speed = BASE_SPEED;
-        if (crouching)
-        {
-            speed *= CROUCH_SLOWDOWN;
-        }
-        else if (!grounded)
-        {
-            speed *= AIR_SLOWDOWN;
-        }
-        // NB actually moving the player occurs in FixedUpdate
+        horizontalInput = Input.GetAxis("Horizontal"); // NB actually moving the player occurs in FixedUpdate
 
         // If the player is grounded and pressed jump this frame, initiate a jump
         if (grounded && Input.GetButtonDown("Jump"))
@@ -137,6 +133,23 @@ public class PlayerController : MonoBehaviour
 
 
         // Update animations
+        // Get mouse position info
+        Vector3 mousePos = Input.mousePosition;
+        Vector3 screenPoint = Camera.main.WorldToScreenPoint(transform.localPosition);
+
+        // Flip sprite so the player always faces towards the mouse cursor
+        if ((facingRight && mousePos.x < screenPoint.x) || (!facingRight && mousePos.x > screenPoint.x))
+        {
+            FlipPlayerFacing();
+        }
+
+        // Point the weapon at the mouse cursor location
+        Vector2 offset = new Vector2(mousePos.x - screenPoint.x, mousePos.y - screenPoint.y) * (facingRight ? 1 : -1);
+        float angle = Mathf.Atan2(offset.y, offset.x) * Mathf.Rad2Deg;
+        currentWeapon.transform.rotation = Quaternion.Euler(0, 0, angle);
+
+
+        // Crouching animation
         if (crouching)
         {
 
@@ -145,7 +158,17 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate()
     {
-        // Update player position based on horizontal movement inputs (A/D)
+        // Update player position
+        // Move the player left or right based on input and walk speed (move slower if crouching or in air)
+        speed = BASE_SPEED;
+        if (crouching)
+        {
+            speed *= CROUCH_SLOWDOWN;
+        }
+        else if (!grounded)
+        {
+            speed *= AIR_SLOWDOWN;
+        }
         playerRigidbody.velocity = new Vector2(horizontalInput * speed, playerRigidbody.velocity.y);
 
         // If the player needs to jump, then jump
@@ -177,5 +200,14 @@ public class PlayerController : MonoBehaviour
     private void SwapWeapon()
     {
         Debug.Log("Swapped weapons!");
+    }
+
+    private void FlipPlayerFacing()
+    {
+        // Debug.Log("Flipped!");
+        facingRight = !facingRight;
+        Vector3 scale = transform.localScale;
+        scale.x *= -1;
+        transform.localScale = scale;
     }
 }
