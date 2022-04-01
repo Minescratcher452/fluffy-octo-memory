@@ -8,7 +8,8 @@ public class PlayerController : MonoBehaviour
     private Rigidbody2D playerRigidbody;
 
     // Equipment
-    // TODO Remember to change these to structs or classes!
+    // TODO Remember to change these to classes!
+    // TODO It **may** be possible to use structs implementing interfaces instead of class inheritance, which may give performance advantages. Low priority.
     // Not a final list!
     public int primaryWeapon;
     public int secondaryWeapon;
@@ -34,7 +35,10 @@ public class PlayerController : MonoBehaviour
     // True if and only if the player has pressed jump, but the character has not actually jumped yet.
     private bool shouldJump;
     private bool grounded;
+
     private bool firing;
+    [SerializeField]
+    private bool hasKillstreak;
 
     // Input
     float horizontalInput;
@@ -63,6 +67,7 @@ public class PlayerController : MonoBehaviour
         shouldJump = false;
         grounded = false;
         firing = false;
+        hasKillstreak = false;
     }
 
     // Update is called once per frame
@@ -89,7 +94,7 @@ public class PlayerController : MonoBehaviour
         // NB actually moving the player occurs in FixedUpdate
 
         // If the player is grounded and pressed jump this frame, initiate a jump
-        if (Input.GetButtonDown("Jump") && grounded)
+        if (grounded && Input.GetButtonDown("Jump"))
         {
             shouldJump = true;
         }
@@ -116,7 +121,19 @@ public class PlayerController : MonoBehaviour
             firing = true;
         }
 
-        
+        // If the player pressed killstreak this frame and has a killstreak to use, then activate the killstreak
+        if (hasKillstreak && Input.GetButtonDown("Killstreak"))
+        {
+            Killstreak();
+        }
+
+
+
+        // Update animations
+        if (crouching)
+        {
+
+        }
     }
 
     void FixedUpdate()
@@ -135,12 +152,18 @@ public class PlayerController : MonoBehaviour
     {
         Debug.Log("Jumped!");
         playerRigidbody.AddForce(new Vector2(0f, JUMP_STRENGTH));
-        shouldJump = false; 
+        shouldJump = false;
     }
 
     private void Fire()
     {
         // Input.mousePosition
         Debug.Log("Fired!");
+    }
+
+    private void Killstreak()
+    {
+        Debug.Log("Killstreak activated!");
+        hasKillstreak = false;
     }
 }
