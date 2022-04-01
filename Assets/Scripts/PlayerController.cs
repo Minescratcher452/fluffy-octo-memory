@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    // Components
+    private Rigidbody2D playerRigidbody;
+
     // Equipment
     // TODO Remember to change these to structs or classes!
     // Not a final list!
@@ -27,7 +30,6 @@ public class PlayerController : MonoBehaviour
     public LayerMask ground;
 
     private bool crouching;
-    private bool inAir;
 
     // True if and only if the player has pressed jump, but the character has not actually jumped yet.
     private bool shouldJump;
@@ -37,15 +39,18 @@ public class PlayerController : MonoBehaviour
     // Input
     float horizontalInput;
     float speed;
-    float crouchInput;
 
     private const float BASE_SPEED = 10;
     private const float CROUCH_SLOWDOWN = 0.8f;
     private const float AIR_SLOWDOWN = 0.6f;
+    private const float JUMP_STRENGTH = 550f;
 
     // Start is called before the first frame update
     void Start()
     {
+        // Init components
+        playerRigidbody = GetComponent<Rigidbody2D>();
+
         // Init input
 
         // Init equipment
@@ -55,7 +60,6 @@ public class PlayerController : MonoBehaviour
         armor = MAX_ARMOR;
         speed = BASE_SPEED;
         crouching = false;
-        inAir = false;
         shouldJump = false;
         grounded = false;
         firing = false;
@@ -78,14 +82,14 @@ public class PlayerController : MonoBehaviour
         {
             speed *= CROUCH_SLOWDOWN;
         }
-        else if (inAir)
+        else if (!grounded)
         {
             speed *= AIR_SLOWDOWN;
         }
         // NB actually moving the player occurs in FixedUpdate
 
-        // If the player pressed jump this frame, initiate a jump
-        if (Input.GetButtonDown("Jump"))
+        // If the player is grounded and pressed jump this frame, initiate a jump
+        if (Input.GetButtonDown("Jump") && grounded)
         {
             shouldJump = true;
         }
@@ -117,8 +121,8 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate()
     {
-        // Update player position based on horizontal movement
-        transform.Translate(new Vector3(horizontalInput, 0, 0) * speed * Time.deltaTime);
+        // Update player position based on horizontal movement inputs (A/D)
+        playerRigidbody.velocity = new Vector2(horizontalInput * speed, playerRigidbody.velocity.y);
 
         // If the player needs to jump, then jump
         if (shouldJump)
@@ -130,7 +134,7 @@ public class PlayerController : MonoBehaviour
     private void Jump()
     {
         Debug.Log("Jumped!");
-
+        playerRigidbody.AddForce(new Vector2(0f, JUMP_STRENGTH));
         shouldJump = false; 
     }
 
