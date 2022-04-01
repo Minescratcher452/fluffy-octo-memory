@@ -13,9 +13,9 @@ public class Weapon : MonoBehaviour
     int numMagazines;
     // Can the fire button be held down to continuously fire?
     bool fullAuto;
-    // How fast does the gun fire? (In ***frames per bullet***).
+    // How fast does the gun fire? (In ***seconds per bullet***).
     float fireRate;
-    // How long does the gun take to reload? (In ***frames***).
+    // How long does the gun take to reload? (In seconds).
     float reloadTime;
     // How accurate is the gun, in terms of maximum degree of deviation from the line of sight? (I.E. how wide is the cone containing all possible bullet paths?)
     // 0 corresponds to 100% accuracy
