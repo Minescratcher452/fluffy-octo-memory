@@ -5,6 +5,8 @@ using UnityEngine;
 // This class acts as the root parent to all weapon scripts (primary and secondary).
 public class Weapon : MonoBehaviour
 {
+    // Localize the weapon name
+    string nameLoc;
     // How many bullets per one magazine?
     int magazineSize;
     // How many magazines can the player carry at a time?
