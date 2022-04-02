@@ -33,7 +33,7 @@ public class Weapon : MonoBehaviour
     // How far can gun hit a target? For raycast weapons, this is the ray length; for projectile weapons, the time until the projectile despawns itself.
     [SerializeField]
     private float range;
-    // How accurate is the gun, in units of maximum degree of deviation from the line of sight? (I.E. how wide is the cone containing all possible bullet paths?)
+    // How accurate is the gun, in units of maximum degree of deviation from the line of sight? (I.E. half the angle of the cone containing all possible bullet paths?)
     // 0 corresponds to 100% accuracy, i.e. 0 degrees of deviation
     [SerializeField]
     private float accuracy;
@@ -66,11 +66,20 @@ public class Weapon : MonoBehaviour
     // Weapon fire logic
     public virtual void Fire(bool facingRight)
     {
-        Debug.Log("Firing!");
+        //Debug.Log("Firing!");
 
-        // Pick a random angle between { -accuracy < 0 < accuracy }
-        float inaccuracyOffset = Random.Range(-Accuracy, Accuracy);
-        Vector2 direction = new Vector2(gunBarrel.transform.right.x, gunBarrel.transform.right.y + inaccuracyOffset) * (facingRight ? 1 : -1);
+        // By default, fire straight forwards
+        Vector2 direction = new Vector2(gunBarrel.transform.right.x, gunBarrel.transform.right.y) * (facingRight ? 1 : -1);
+
+        // Pick a random angle in degrees between { -accuracy < 0 < accuracy }
+        float inaccuracyOffset = Random.Range(-Accuracy, Accuracy) * Mathf.Deg2Rad;
+        Debug.Log(inaccuracyOffset);
+
+        // Rotate direction by inaccuracyOffset degrees anticlockwise
+        float x2 = (Mathf.Cos(inaccuracyOffset) * direction.x) - (Mathf.Sin(inaccuracyOffset) * direction.y);
+        float y2 = (Mathf.Sin(inaccuracyOffset) * direction.x) + (Mathf.Cos(inaccuracyOffset) * direction.y);
+        direction = new Vector2(x2, y2);
+        Debug.Log(direction);
 
         // Run the raycast
         RaycastHit2D hit = Physics2D.Raycast(gunBarrel.transform.position, direction, Range);
@@ -84,7 +93,7 @@ public class Weapon : MonoBehaviour
         // If it hits something...
         if (hit.collider != null)
         {
-            Debug.Log(hit.point);
+            //Debug.Log(hit.point);
 
             // Set the end position for our visual laser
             lr.SetPosition(1, hit.point);
