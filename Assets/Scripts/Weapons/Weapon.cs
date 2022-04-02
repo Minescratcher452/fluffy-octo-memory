@@ -8,6 +8,10 @@ public class Weapon : MonoBehaviour
 {
     // Components
     public GameObject gunBarrel;
+    private LineRenderer lr; 
+    
+    private WaitForSeconds shotDuration = new WaitForSeconds(0.07f);    // WaitForSeconds object used by our ShotEffect coroutine, determines time laser line will remain visible
+
 
     // Localize the weapon name
     string nameLoc;
@@ -51,6 +55,14 @@ public class Weapon : MonoBehaviour
 
     // TODO Each weapon should also store its art assets and fire, reload, and (if unique) "empty clip" sound files in some form.
 
+    // Init
+    // TODO This may be removable when testing is done
+    void Start()
+    {
+        lr = GetComponent<LineRenderer>();
+        lr.enabled = false;
+    }
+
     // Weapon fire logic
     public virtual void Fire(bool facingRight)
     {
@@ -64,12 +76,38 @@ public class Weapon : MonoBehaviour
         RaycastHit2D hit = Physics2D.Raycast(gunBarrel.transform.position, direction, Range);
         Debug.DrawRay(gunBarrel.transform.position, direction, Color.blue, 5);
 
+        // The laser visual effect should start from the gun barrel
+        lr.SetPosition(0, gunBarrel.transform.position);
+
+        StartCoroutine(ShotEffect());
+
         // If it hits something...
         if (hit.collider != null)
         {
             Debug.Log(hit.point);
 
+            // Set the end position for our visual laser
+            lr.SetPosition(1, hit.point);
+
             // TODO If it's a character, damage them
+        } else {
+            // If we didn't hit anything, set the endpoint of the laser to its maximum range
+            lr.SetPosition(1, gunBarrel.transform.position + new Vector3(direction.x * Range, direction.y * Range, 0));
         }
+    }
+
+    private IEnumerator ShotEffect()
+    {
+        // Play the shooting sound effect
+        // gunAudio.Play();
+
+        // Turn on our line renderer
+        lr.enabled = true;
+
+        //Wait for .07 seconds
+        yield return shotDuration;
+
+        // Deactivate our line renderer after waiting
+        lr.enabled = false;
     }
 }
