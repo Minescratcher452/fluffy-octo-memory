@@ -76,6 +76,10 @@ public class Weapon : MonoBehaviour
         Debug.Log(inaccuracyOffset);
 
         // Rotate direction by inaccuracyOffset degrees anticlockwise
+        // x2 = x1cos(B) - y1sin(B)
+        // y2 = x1sin(B) + y1cos(B)
+        // Note that a negative value of inaccuracyOffset will therefore result in clockwise rotation, so we get a nice symmetrical cone
+        // https://matthew-brett.github.io/teaching/rotation_2d.html
         float x2 = (Mathf.Cos(inaccuracyOffset) * direction.x) - (Mathf.Sin(inaccuracyOffset) * direction.y);
         float y2 = (Mathf.Sin(inaccuracyOffset) * direction.x) + (Mathf.Cos(inaccuracyOffset) * direction.y);
         direction = new Vector2(x2, y2);
