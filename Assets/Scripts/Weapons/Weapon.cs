@@ -54,6 +54,7 @@ public class Weapon : MonoBehaviour
     public float Damage { get => damage; }
 
     // Mutable weapon properties
+    // TODO remove serialization when UI implemented
     [SerializeField]
     private int currentMag; // Ammo currently ready to be fired
     [SerializeField]
@@ -97,7 +98,6 @@ public class Weapon : MonoBehaviour
 
         // Pick a random angle in degrees between { -accuracy < 0 < accuracy }
         float inaccuracyOffset = Random.Range(-Accuracy, Accuracy) * Mathf.Deg2Rad;
-        Debug.Log(inaccuracyOffset);
 
         // Rotate direction by inaccuracyOffset degrees anticlockwise
         // x2 = x1cos(B) - y1sin(B)
@@ -107,7 +107,6 @@ public class Weapon : MonoBehaviour
         float x2 = (Mathf.Cos(inaccuracyOffset) * direction.x) - (Mathf.Sin(inaccuracyOffset) * direction.y);
         float y2 = (Mathf.Sin(inaccuracyOffset) * direction.x) + (Mathf.Cos(inaccuracyOffset) * direction.y);
         direction = new Vector2(x2, y2);
-        Debug.Log(direction);
 
         // Run the raycast
         RaycastHit2D hit = Physics2D.Raycast(gunBarrel.transform.position, direction, Range);
@@ -126,7 +125,7 @@ public class Weapon : MonoBehaviour
             // Set the end position for our visual laser
             lr.SetPosition(1, hit.point);
 
-            // TODO If it's a character, damage them
+            // TODO If we hit a character, damage them
         }
         else
         {
@@ -174,8 +173,8 @@ public class Weapon : MonoBehaviour
         // 25 in the chamber, or 15 in the chamber and 10 in storage?
         // Currently, this does the latter.
         int reload = System.Math.Min(MagazineSize, availableAmmo);
-        currentMag = reload;
         availableAmmo -= reload;
+        currentMag = reload;
 
         // Add any leftovers from the old clip to storage
         AddAmmo(excess);

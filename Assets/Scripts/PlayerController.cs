@@ -107,15 +107,12 @@ public class PlayerController : MonoBehaviour
             crouching = true;
         }
 
-        // If the player released fire this frame, then stop firing if the weapon is automatic
+        // If the player released fire this frame, then stop firing if we were previously
         if (Input.GetButtonUp("Fire"))
         {
             firing = false;
-
-            // TODO We want the gun to fire instantly on click, but not to circumvent fire rate by spam clicking.
-            timeToNextShot = 0;
         }
-        // If the player pressed fire this frame, then execute firing logic
+        // If the player pressed fire this frame, then begin firing
         else if (Input.GetButtonDown("Fire"))
         {
             firing = true;
@@ -142,21 +139,28 @@ public class PlayerController : MonoBehaviour
 
 
         // Fire weapon
-        // TODO handle non-full-auto weapons
+        // TODO do we want any burst-fire weapons? Multishot guns like shotguns might be implemented that way as well. Might need a switch(Enum) in here if so
         if (firing)
         {
-            if (currentWeapon.IsFullAuto)
+            if (timeToNextShot <= 0)
             {
-                if (timeToNextShot <= 0)
+                currentWeapon.Fire(facingRight);
+                timeToNextShot = currentWeapon.FireRate;
+
+                // If the current weapon is not full auto, we shouldn't keep firing after the first shot
+                // TODO would this be more efficient as a direct assignment?
+                if (!currentWeapon.IsFullAuto)
                 {
-                    currentWeapon.Fire(facingRight);
-                    timeToNextShot = currentWeapon.FireRate;
-                }
-                else
-                {
-                    timeToNextShot -= Time.deltaTime;
+                    firing = false;
                 }
             }
+        }
+
+        // Decrement timeToNextShot
+        // This is OUTSIDE the main fire loop to a) allow for a cooldown between shots on non-automatic weapons and b) prevent fire rate circumvention via spam-clicking
+        if (timeToNextShot > 0)
+        {
+            timeToNextShot -= Time.deltaTime;
         }
 
 
@@ -214,15 +218,9 @@ public class PlayerController : MonoBehaviour
         shouldJump = false;
     }
 
-    private void Fire()
-    {
-        // Input.mousePosition
-        Debug.Log("Fired!");
-    }
-
     private void Reload()
     {
-        // TODO Play an animation prior to changing any numbers
+        // TODO Play an animation based on currentWeapon.ReloadTime prior to changing any numbers
         Debug.Log("Reloaded current weapon!");
         currentWeapon.Reload();
     }
