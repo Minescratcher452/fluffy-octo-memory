@@ -60,6 +60,7 @@ public class PlayerController : MonoBehaviour
     {
         // Init components
         playerRigidbody = GetComponent<Rigidbody2D>();
+        currentWeapon = primaryWeapon.GetComponent<Weapon>();
 
         // Init input
 
@@ -73,7 +74,6 @@ public class PlayerController : MonoBehaviour
         crouching = false;
         shouldJump = false;
         grounded = false;
-        currentWeapon = primaryWeapon.GetComponent<Weapon>();
         firing = false;
         timeToNextShot = 0;
         hasKillstreak = false;
@@ -121,16 +121,22 @@ public class PlayerController : MonoBehaviour
             firing = true;
         }
 
-        // If the player pressed killstreak this frame and has a killstreak to use, then activate the killstreak
-        if (hasKillstreak && Input.GetButtonDown("Killstreak"))
+        // If the player pressed reload this frame, reload the current weapon
+        if (Input.GetButtonDown("Reload"))
         {
-            Killstreak();
+            Reload();
         }
 
         // If the player pressed Swap Weapons this frame, then swap weapons
         if (Input.GetButtonDown("Swap Weapons"))
         {
             SwapWeapon();
+        }
+
+        // If the player pressed killstreak this frame and has a killstreak to use, then activate the killstreak
+        if (hasKillstreak && Input.GetButtonDown("Killstreak"))
+        {
+            Killstreak();
         }
 
 
@@ -214,15 +220,22 @@ public class PlayerController : MonoBehaviour
         Debug.Log("Fired!");
     }
 
-    private void Killstreak()
+    private void Reload()
     {
-        Debug.Log("Killstreak activated!");
-        hasKillstreak = false;
+        // TODO Play an animation prior to changing any numbers
+        Debug.Log("Reloaded current weapon!");
+        currentWeapon.Reload();
     }
 
     private void SwapWeapon()
     {
         Debug.Log("Swapped weapons!");
+    }
+
+    private void Killstreak()
+    {
+        Debug.Log("Killstreak activated!");
+        hasKillstreak = false;
     }
 
     private void FlipPlayerFacing()
