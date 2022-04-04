@@ -2158,7 +2158,7 @@ MonoBehaviour:
   gunBarrel: {fileID: 2053944686}
   magazineSize: 15
   numMagazines: 4
-  fullAuto: 0
+  fullAuto: 1
   fireRate: 0.2
   reloadTime: 0.3
   range: 50

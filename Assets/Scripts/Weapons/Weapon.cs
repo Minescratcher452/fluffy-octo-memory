@@ -84,7 +84,7 @@ public class Weapon : MonoBehaviour
         //Debug.Log("Firing!");
 
         // If this gun is are out of ammo, then play a clicking sound and don't bother to do anything else
-        if (currentMag == 0)
+        if (!HasAmmo())
         {
             // TODO Play clicking sound
             return;
@@ -155,8 +155,8 @@ public class Weapon : MonoBehaviour
     // If the gun is reloaded while not empty, any ammo in the current magazine goes into the total ammo pile.
     public void Reload()
     {
-        // Exit immediately if no reload is necessary
-        if (currentMag == MagazineSize)
+        // Exit immediately if reeloading is unneccessary (full magazine) or impossible (no available ammo)
+        if (currentMag == MagazineSize || availableAmmo == 0)
         {
             return;
         }
