@@ -8,13 +8,13 @@ public class Weapon : MonoBehaviour
 {
     // Components
     [SerializeField]
-    private GameObject gunBarrel;
-    private LineRenderer lr;
+    protected GameObject gunBarrel;
+    protected LineRenderer lr;
 
-    private WaitForSeconds shotDuration = new WaitForSeconds(0.07f);    // WaitForSeconds object used by our ShotEffect coroutine, determines time laser line will remain visible
+    protected WaitForSeconds shotDuration = new WaitForSeconds(0.07f);    // WaitForSeconds object used by our ShotEffect coroutine, determines time laser line will remain visible
 
     // Immutable gun properties - can't be set readonly *and* initialized via inspector so remember to use only the getters even within class
-    readonly string nameLoc; // Localize the weapon name
+    public readonly string nameLoc; // Localize the weapon name
     [SerializeField]
     private int magazineSize; // How many bullets per one magazine?
     [SerializeField]
@@ -55,22 +55,23 @@ public class Weapon : MonoBehaviour
     public float ReloadTime { get => reloadTime; }
     public float Range { get => range; }
     public float Accuracy { get => accuracy; }
+    public float RecoilIncrement { get => recoilIncrement; }
     public float Damage { get => damage; }
 
     // Mutable weapon properties
     // TODO remove serialization when UI implemented
     [SerializeField]
-    private int currentMag; // Ammo currently ready to be fired
+    protected int currentMag; // Ammo currently ready to be fired
     [SerializeField]
-    private int availableAmmo; // Ammo available to be loaded into the gun
+    protected int availableAmmo; // Ammo available to be loaded into the gun
     [SerializeField]
-    private float recoil; // Additional inaccuracy due to recoil, in degrees
+    protected float recoil; // Additional inaccuracy due to recoil, in degrees
 
     // TODO Each weapon should also store its art assets and fire, reload, and (if unique) "empty clip" sound files in some form.
 
 
     // This value is essentially the fire rate in RPS which should be a cutoff for weapons experiencing recoil inaccuracy. 
-    private const float RECOIL_DECAY_COEFF = 4.5f;
+    private const float RECOIL_DECAY_COEFF = 3f;
 
     // Init
     // TODO This may be removable when testing is done
@@ -91,7 +92,7 @@ public class Weapon : MonoBehaviour
         if (recoil > 0)
         {
             // Decrement recoil slowly
-            recoil -= Time.deltaTime * recoilIncrement * RECOIL_DECAY_COEFF;
+            recoil -= Time.deltaTime * RecoilIncrement * RECOIL_DECAY_COEFF;
         }
 
         if (recoil < 0)
@@ -125,12 +126,12 @@ public class Weapon : MonoBehaviour
         float inaccuracyOffset = Random.Range(-maxError, maxError) * Mathf.Deg2Rad;
 
         // Increment the recoil *after* calculating the offset to ensure correct accuracy on first shot.
-        recoil += recoilIncrement;
+        recoil += RecoilIncrement;
 
         // Rotate direction by inaccuracyOffset degrees anticlockwise
         // x2 = x1cos(B) - y1sin(B)
         // y2 = x1sin(B) + y1cos(B)
-        // Note that a negative value of inaccuracyOffset will therefore result in clockwise rotation, so we get a nice symmetrical cone
+        // Note that a negative value of inaccuracyOffset will result in clockwise rotation, so we get a nice symmetrical cone
         // https://matthew-brett.github.io/teaching/rotation_2d.html
         float x2 = (Mathf.Cos(inaccuracyOffset) * direction.x) - (Mathf.Sin(inaccuracyOffset) * direction.y);
         float y2 = (Mathf.Sin(inaccuracyOffset) * direction.x) + (Mathf.Cos(inaccuracyOffset) * direction.y);
@@ -162,7 +163,7 @@ public class Weapon : MonoBehaviour
         }
     }
 
-    private IEnumerator ShotEffect()
+    protected IEnumerator ShotEffect()
     {
         // Play the shooting sound effect
         // gunAudio.Play();

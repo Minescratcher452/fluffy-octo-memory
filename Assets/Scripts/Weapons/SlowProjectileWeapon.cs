@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-// This class acts as the parent to all *non-raytraced* weapons (i.e. flamethrowers, rocket launchers, etc., whose projectiles do not travel "instantly".)
+// This class acts as the parent to all *non-raytraced* weapons (i.e. flamethrowers, rocket launchers, etc., whose projectiles do not travel instantly.)
 public class SlowProjectileWeapon : Weapon
 {
     [SerializeField]
