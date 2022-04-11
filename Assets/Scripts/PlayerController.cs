@@ -56,6 +56,7 @@ public class PlayerController : MonoBehaviour
     private const float CROUCH_SLOWDOWN = 0.8f;
     private const float CROUCH_AIM_COEFF = 1f;
     private const float AIR_SLOWDOWN = 0.7f;
+    private const float AIR_AIM_COEFF = 2f;
     private const float JUMP_STRENGTH = 700f;
 
     // Start is called before the first frame update
@@ -148,8 +149,8 @@ public class PlayerController : MonoBehaviour
         {
             if (timeToNextShot <= 0)
             {
-                // Movement decreases accuracy (increases aim cone); crouching increases it
-                movementAccuracyFactor = (MOVEMENT_AIM_COEFF * Mathf.Abs(horizontalInput)) - (CROUCH_AIM_COEFF * (crouching ? 1 : 0));
+                // Movement and being in the air decrease accuracy (increases aim cone); crouching increases accuracy (shrinks aim cone)
+                movementAccuracyFactor = (MOVEMENT_AIM_COEFF * Mathf.Abs(horizontalInput)) + (AIR_AIM_COEFF * (!grounded ? 1 : 0)) - (CROUCH_AIM_COEFF * (crouching ? 1 : 0));
                 currentWeapon.Fire(facingRight, movementAccuracyFactor);
                 timeToNextShot = currentWeapon.FireRate;
 

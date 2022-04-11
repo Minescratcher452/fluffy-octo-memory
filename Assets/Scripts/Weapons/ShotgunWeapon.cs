@@ -12,6 +12,15 @@ public class ShotgunWeapon : Weapon
     {
         // TODO: We need multiple LineRenderers to render all of the shot trails. Either create the components dynamically at runtime or set all shotguns to have the same # of pellets.
 
+        // Deafult weapon init
+        // Component init
+        lr = GetComponent<LineRenderer>();
+        lr.enabled = false;
+
+        // Initialize ammo
+        maxAvailableAmmo = (NumMagazines - 1) * MagazineSize;
+        currentMag = MagazineSize;
+        reserveAmmo = MaxAvailableAmmo;
     }
 
     public override void Fire(bool facingRight, float movementAccuracyFactor)
@@ -34,8 +43,9 @@ public class ShotgunWeapon : Weapon
             // By default, fire straight forwards
             Vector2 direction = new Vector2(gunBarrel.transform.right.x, gunBarrel.transform.right.y) * (facingRight ? 1 : -1);
 
-            // Pick a random angle in degrees between { -accuracy < 0 < accuracy }, then modify it for movement, crouching, and recoil
-            float maxError = Accuracy + recoil + movementAccuracyFactor;
+            // Pick a random angle in degrees between { -accuracy < 0 < accuracy }
+            // NB shotgun pellet spread is not modified by movement
+            float maxError = Accuracy + recoil;
             float inaccuracyOffset = Random.Range(-maxError, maxError) * Mathf.Deg2Rad;
 
             // Rotate direction by inaccuracyOffset degrees anticlockwise

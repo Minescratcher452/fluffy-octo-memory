@@ -19,7 +19,7 @@ public class Weapon : MonoBehaviour
     private int magazineSize; // How many bullets per one magazine?
     [SerializeField]
     private int numMagazines; // How many magazines can the player carry at a time?
-    private int maxAvailableAmmo; // The maximum "loose" ammo that can be carried ready for reload. Because one magazine is consumed in the weapon, equivalent to (numMagazines - 1) * MagazineSize and initialized as such in Start.
+    protected int maxAvailableAmmo; // The maximum "loose" ammo that can be carried ready for reload. Because one magazine is consumed in the weapon, equivalent to (numMagazines - 1) * MagazineSize and initialized as such in Start.
     // Can the fire button be held down to continuously fire?
     [SerializeField]
     private bool fullAuto;
@@ -63,7 +63,7 @@ public class Weapon : MonoBehaviour
     [SerializeField]
     protected int currentMag; // Ammo currently ready to be fired
     [SerializeField]
-    protected int availableAmmo; // Ammo available to be loaded into the gun
+    protected int reserveAmmo; // Ammo available to be loaded into the gun
     [SerializeField]
     protected float recoil; // Additional inaccuracy due to recoil, in degrees
 
@@ -84,7 +84,7 @@ public class Weapon : MonoBehaviour
         // Initialize ammo
         maxAvailableAmmo = (NumMagazines - 1) * MagazineSize;
         currentMag = MagazineSize;
-        availableAmmo = MaxAvailableAmmo;
+        reserveAmmo = MaxAvailableAmmo;
     }
 
     void Update()
@@ -181,41 +181,37 @@ public class Weapon : MonoBehaviour
     // Weapon reload logic
     // Ammo is stored as two values, one representing the ammo in the current magazine and the other the total ammo available for reloading.
     // If the gun is attempted to be reloaded while completely full, nothing happens.
-    // If the gun is reloaded while not empty, any ammo in the current magazine goes into the total ammo pile.
+    // If the gun is reloaded while not empty, any ammo in the current magazine is counted as reserve ammo.
     public void Reload()
     {
         // Exit immediately if reeloading is unneccessary (full magazine) or impossible (no available ammo)
-        if (currentMag == MagazineSize || availableAmmo == 0)
+        if (currentMag == MagazineSize || reserveAmmo == 0)
         {
             return;
         }
 
-        // If there are bullets in the current magazine still, we need to store them so we can add them back onto the pile
+        // If there are bullets in the current magazine still, we need to store them so we can add them back onto the reserve pile
         int excess = 0;
         if (HasAmmo())
         {
             excess = currentMag;
         }
-
-        // If we have too little available ammo for a full magazine, use everything that's left
-        // TODO: If we have (ex) 10 rounds in the chamber and 15 in storage, what do we want to end up with after reloading?
-        // 25 in the chamber, or 15 in the chamber and 10 in storage?
-        // Currently, this does the latter.
-        int reload = System.Math.Min(MagazineSize, availableAmmo);
-        availableAmmo -= reload;
-        currentMag = reload;
-
         // Add any leftovers from the old clip to storage
         AddAmmo(excess);
+
+        // If we have too little available ammo for a full magazine, use everything that's left
+        int reload = System.Math.Min(MagazineSize, reserveAmmo);
+        reserveAmmo -= reload;
+        currentMag = reload;
     }
 
     // Increases availableAmmo by newAmmo, without going over the weapon's maximum ammo capacity.
     public void AddAmmo(int newAmmo)
     {
-        availableAmmo += newAmmo;
-        if (availableAmmo > MaxAvailableAmmo)
+        reserveAmmo += newAmmo;
+        if (reserveAmmo > MaxAvailableAmmo)
         {
-            availableAmmo = MaxAvailableAmmo;
+            reserveAmmo = MaxAvailableAmmo;
         }
     }
 
