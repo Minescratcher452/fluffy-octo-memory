@@ -36,6 +36,10 @@ public class Weapon : MonoBehaviour
     // 0 corresponds to 0 degrees of deviation, i.e. 100% accuracy
     [SerializeField]
     private float accuracy;
+    // How much does recoil affect aim, in units of maximum degree of deviation from the line of sight?
+    // 0 corresponds to 0 degrees of deviation (continuous fire does not affect accuracy)
+    [SerializeField]
+    private float recoilIncrement;
     // How much damage will the bullet do on impact? 
     // (This can be conceived of as a percentage, i.e. 20 damage = 20% of the target's max health, since by default health is 100.)
     [SerializeField]
@@ -59,8 +63,14 @@ public class Weapon : MonoBehaviour
     private int currentMag; // Ammo currently ready to be fired
     [SerializeField]
     private int availableAmmo; // Ammo available to be loaded into the gun
+    [SerializeField]
+    private float recoil; // Additional inaccuracy due to recoil, in degrees
 
     // TODO Each weapon should also store its art assets and fire, reload, and (if unique) "empty clip" sound files in some form.
+
+
+    // This value is essentially the fire rate in RPS which should be a cutoff for weapons experiencing recoil inaccuracy. 
+    private const float RECOIL_DECAY_COEFF = 4.5f;
 
     // Init
     // TODO This may be removable when testing is done
@@ -76,10 +86,24 @@ public class Weapon : MonoBehaviour
         availableAmmo = MaxAvailableAmmo;
     }
 
+    void Update()
+    {
+        if (recoil > 0)
+        {
+            // Decrement recoil slowly
+            recoil -= Time.deltaTime * recoilIncrement * RECOIL_DECAY_COEFF;
+        }
+
+        if (recoil < 0)
+        {
+            // Floor recoil
+            recoil = 0;
+        }
+    }
     // Weapon fire logic
     // This class uses raycasting to fire "instant" bullets. For slower projectiles like rockets, flames, etc. use SlowProjectileWeapon.
     // Laser line code adapted from https://learn.unity.com/tutorial/let-s-try-shooting-with-raycasts#
-    public virtual void Fire(bool facingRight)
+    public virtual void Fire(bool facingRight, float movementAccuracyFactor)
     {
         //Debug.Log("Firing!");
 
@@ -96,8 +120,12 @@ public class Weapon : MonoBehaviour
         // By default, fire straight forwards
         Vector2 direction = new Vector2(gunBarrel.transform.right.x, gunBarrel.transform.right.y) * (facingRight ? 1 : -1);
 
-        // Pick a random angle in degrees between { -accuracy < 0 < accuracy }
-        float inaccuracyOffset = Random.Range(-Accuracy, Accuracy) * Mathf.Deg2Rad;
+        // Pick a random angle in degrees between { -accuracy < 0 < accuracy }, then modify it for movement, crouching, and recoil
+        float maxError = Accuracy + recoil + movementAccuracyFactor;
+        float inaccuracyOffset = Random.Range(-maxError, maxError) * Mathf.Deg2Rad;
+
+        // Increment the recoil *after* calculating the offset to ensure correct accuracy on first shot.
+        recoil += recoilIncrement;
 
         // Rotate direction by inaccuracyOffset degrees anticlockwise
         // x2 = x1cos(B) - y1sin(B)

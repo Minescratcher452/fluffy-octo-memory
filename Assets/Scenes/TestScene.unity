@@ -2162,7 +2162,9 @@ MonoBehaviour:
   fireRate: 0.2
   reloadTime: 0.3
   range: 50
-  accuracy: 5
+  accuracy: 0
+  recoilIncrement: 0.15
   damage: 10
   currentMag: 0
   availableAmmo: 0
+  recoil: 0

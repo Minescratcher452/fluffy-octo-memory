@@ -42,18 +42,21 @@ public class PlayerController : MonoBehaviour
     private Weapon currentWeapon;
     private bool firing;
     private float timeToNextShot;
+    private float movementAccuracyFactor;
 
     [SerializeField]
     private bool hasKillstreak;
 
     // Input
     float horizontalInput;
-    float speed;
+    float speed; 
 
-    private const float BASE_SPEED = 10;
-    private const float CROUCH_SLOWDOWN = 0.7f;
-    private const float AIR_SLOWDOWN = 0.6f;
-    private const float JUMP_STRENGTH = 600f;
+    private const float BASE_SPEED = 10f;
+    private const float MOVEMENT_AIM_COEFF = 2f;
+    private const float CROUCH_SLOWDOWN = 0.8f;
+    private const float CROUCH_AIM_COEFF = 1f;
+    private const float AIR_SLOWDOWN = 0.7f;
+    private const float JUMP_STRENGTH = 700f;
 
     // Start is called before the first frame update
     void Start()
@@ -76,6 +79,7 @@ public class PlayerController : MonoBehaviour
         grounded = false;
         firing = false;
         timeToNextShot = 0;
+        movementAccuracyFactor = 0;
         hasKillstreak = false;
     }
 
@@ -139,12 +143,14 @@ public class PlayerController : MonoBehaviour
 
 
         // Fire weapon
-        // TODO do we want any burst-fire weapons? Multishot guns like shotguns might be implemented that way as well. Might need a switch(Enum) in here if so
+        // TODO do we want any burst-fire weapons? Might need a switch(Enum) in here if so
         if (firing)
         {
             if (timeToNextShot <= 0)
             {
-                currentWeapon.Fire(facingRight);
+                // Movement decreases accuracy (increases aim cone); crouching increases it
+                movementAccuracyFactor = (MOVEMENT_AIM_COEFF * Mathf.Abs(horizontalInput)) - (CROUCH_AIM_COEFF * (crouching ? 1 : 0));
+                currentWeapon.Fire(facingRight, movementAccuracyFactor);
                 timeToNextShot = currentWeapon.FireRate;
 
                 // If the current weapon is not full auto, we shouldn't keep firing after the first shot

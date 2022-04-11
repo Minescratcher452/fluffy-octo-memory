@@ -8,7 +8,7 @@ public class SlowProjectileWeapon : Weapon
     [SerializeField]
     private GameObject projectile;
 
-    public override void Fire(bool facingRight)
+    public override void Fire(bool facingRight, float movementAccuracyFactor)
     {
         // Pick a random angle between { -accuracy < 0 < accuracy }
 
