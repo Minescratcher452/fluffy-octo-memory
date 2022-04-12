@@ -8,14 +8,22 @@ public class ShotgunWeapon : Weapon
     [SerializeField]
     private int pellets; // How many pellets should be fired in one blast?
 
+    private LineRenderer[] lrs;
+
     void Start()
     {
-        // TODO: We need multiple LineRenderers to render all of the shot trails. Either create the components dynamically at runtime or set all shotguns to have the same # of pellets.
-
         // Deafult weapon init
         // Component init
-        lr = GetComponent<LineRenderer>();
-        lr.enabled = false;
+        // Each pellet needs its own LineRenderer. A GameObject can have no more than 1, so we need to copy the one attached to the prefab into (pellets - 1) children of this GameObject and store them in an array.
+        lrs = new LineRenderer[pellets];
+        LineRenderer lr_O;
+
+        for (int i = 0; i < pellets; i++)
+        {
+            lr_O = Instantiate(lr, this.transform);
+            lr_O.enabled = false;
+            lrs[i] = lr_O;
+        }
 
         // Initialize ammo
         maxAvailableAmmo = (NumMagazines - 1) * MagazineSize;
@@ -62,9 +70,7 @@ public class ShotgunWeapon : Weapon
             Debug.DrawRay(gunBarrel.transform.position, direction, Color.blue, 5);
 
             // The laser visual effect should start from the gun barrel
-            lr.SetPosition(0, gunBarrel.transform.position);
-
-            StartCoroutine(ShotEffect());
+            lrs[i].SetPosition(0, gunBarrel.transform.position);
 
             // If it hits something...
             if (hit.collider != null)
@@ -72,15 +78,17 @@ public class ShotgunWeapon : Weapon
                 //Debug.Log(hit.point);
 
                 // Set the end position for our visual laser
-                lr.SetPosition(1, hit.point);
+                lrs[i].SetPosition(1, hit.point);
 
                 // TODO If we hit a character, damage them
             }
             else
             {
                 // If we didn't hit anything, set the endpoint of the laser to its maximum range
-                lr.SetPosition(1, gunBarrel.transform.position + new Vector3(direction.x * Range, direction.y * Range, 0));
+                lrs[i].SetPosition(1, gunBarrel.transform.position + new Vector3(direction.x * Range, direction.y * Range, 0));
             }
+
+            StartCoroutine(ShotEffect(lrs[i]));
         }
 
         // Increment the recoil *after* firing to ensure correct accuracy on first shot.

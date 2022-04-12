@@ -9,6 +9,7 @@ public class Weapon : MonoBehaviour
     // Components
     [SerializeField]
     protected GameObject gunBarrel;
+    [SerializeField]
     protected LineRenderer lr;
 
     protected WaitForSeconds shotDuration = new WaitForSeconds(0.07f);    // WaitForSeconds object used by our ShotEffect coroutine, determines time laser line will remain visible
@@ -78,7 +79,7 @@ public class Weapon : MonoBehaviour
     void Start()
     {
         // Component init
-        lr = GetComponent<LineRenderer>();
+        lr = Instantiate(lr, this.transform);
         lr.enabled = false;
 
         // Initialize ammo
@@ -144,8 +145,6 @@ public class Weapon : MonoBehaviour
         // The laser visual effect should start from the gun barrel
         lr.SetPosition(0, gunBarrel.transform.position);
 
-        StartCoroutine(ShotEffect());
-
         // If it hits something...
         if (hit.collider != null)
         {
@@ -161,9 +160,11 @@ public class Weapon : MonoBehaviour
             // If we didn't hit anything, set the endpoint of the laser to its maximum range
             lr.SetPosition(1, gunBarrel.transform.position + new Vector3(direction.x * Range, direction.y * Range, 0));
         }
+
+        StartCoroutine(ShotEffect(lr));
     }
 
-    protected IEnumerator ShotEffect()
+    protected IEnumerator ShotEffect(LineRenderer lr)
     {
         // Play the shooting sound effect
         // gunAudio.Play();
