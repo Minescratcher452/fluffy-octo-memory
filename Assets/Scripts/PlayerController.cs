@@ -31,15 +31,14 @@ public class PlayerController : MonoBehaviour
 
     // True for facing right (positive X), false for left (negative X).
     public bool facingRight;
-
     // True if and only if the player has pressed jump, but the character has not actually jumped yet.
     private bool shouldJump;
     // True if and only if the player is standing on solid ground.
     private bool grounded;
-
     private bool crouching;
 
     private Weapon currentWeapon;
+    public Weapon CurrentWeapon { get => currentWeapon; }
     private bool firing;
     private float timeToNextShot;
     private float movementAccuracyFactor;

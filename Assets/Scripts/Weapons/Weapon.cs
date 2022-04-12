@@ -48,6 +48,7 @@ public class Weapon : MonoBehaviour
 
     // Getters
     public string Name { get => nameLoc; }
+    public GameObject GunBarrel { get => gunBarrel; }
     public int MagazineSize { get => magazineSize; }
     public int NumMagazines { get => numMagazines; }
     public int MaxAvailableAmmo { get => maxAvailableAmmo; }
