@@ -52,8 +52,8 @@ public class ShotgunWeapon : Weapon
             Vector2 direction = new Vector2(gunBarrel.transform.right.x, gunBarrel.transform.right.y) * (facingRight ? 1 : -1);
 
             // Pick a random angle in degrees between { -accuracy < 0 < accuracy }
-            // NB shotgun pellet spread is not modified by movement
-            float maxError = Accuracy + recoil;
+            // TODO: should shotgun pellet spread be modified by movement?
+            float maxError = Accuracy + recoil + movementAccuracyFactor;
             float inaccuracyOffset = Random.Range(-maxError, maxError) * Mathf.Deg2Rad;
 
             // Rotate direction by inaccuracyOffset degrees anticlockwise

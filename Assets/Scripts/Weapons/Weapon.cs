@@ -73,6 +73,7 @@ public class Weapon : MonoBehaviour
 
     // This value is essentially the fire rate in RPS which should be a cutoff for weapons experiencing recoil inaccuracy. 
     private const float RECOIL_DECAY_COEFF = 3f;
+    private const float RECOIL_CAP = 3f;
 
     // Init
     // TODO This may be removable when testing is done
@@ -100,6 +101,11 @@ public class Weapon : MonoBehaviour
         {
             // Floor recoil
             recoil = 0;
+        }
+        else if (recoil > RECOIL_CAP)
+        {
+            // Ceiling recoil
+            recoil = RECOIL_CAP;
         }
     }
     // Weapon fire logic

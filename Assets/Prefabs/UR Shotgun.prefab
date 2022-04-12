@@ -52,8 +52,8 @@ MonoBehaviour:
   fullAuto: 0
   fireRate: 0.5
   reloadTime: 0.4
-  range: 15
-  accuracy: 14
+  range: 11
+  accuracy: 12
   recoilIncrement: 1
   damage: 12
   currentMag: 0
