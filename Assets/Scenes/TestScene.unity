@@ -729,7 +729,7 @@ GameObject:
   - component: {fileID: 691416055}
   - component: {fileID: 691416054}
   m_Layer: 6
-  m_Name: Solids
+  m_Name: Solids Tilemap
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
