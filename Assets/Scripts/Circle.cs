@@ -54,6 +54,7 @@ public class Circle : MonoBehaviour
 
         // Calculate the radius.
         float radius = Mathf.Abs((A * dist) + C) / Mathf.Sqrt((A * A) + (B * B));
+        radius += lr.startWidth / 2; // Account for the thickness of the circle - otherwise, shots can pass exactly tangent to the circle and won't be "inside" the crosshair
 
         // Draw the circle with the appropriate radius about the mouse cursor
         DrawCircle(mousePos, radius, segments, 0);

@@ -156,8 +156,6 @@ public class Weapon : MonoBehaviour
         // If it hits something...
         if (hit.collider != null)
         {
-            //Debug.Log(hit.point);
-
             // Set the end position for our visual laser
             lr.SetPosition(1, hit.point);
 
@@ -175,15 +173,14 @@ public class Weapon : MonoBehaviour
     protected IEnumerator ShotEffect(LineRenderer lr)
     {
         // Play the shooting sound effect
-        // gunAudio.Play();
 
-        // Turn on our line renderer
+        // Turn on the line renderer
         lr.enabled = true;
 
         //Wait for .07 seconds
         yield return shotDuration;
 
-        // Deactivate our line renderer after waiting
+        // Deactivate line renderer after waiting
         lr.enabled = false;
     }
 
@@ -230,7 +227,7 @@ public class Weapon : MonoBehaviour
         return currentMag > 0;
     }
 
-
+    // Returns the net maximum angle of inaccuracy, i.e. accuracy plus recoil effects
     public float FireConeAngle()
     {
         return Accuracy + recoil;
