@@ -71,10 +71,11 @@ public class Weapon : MonoBehaviour
 
     // TODO Each weapon should also store its art assets and fire, reload, and (if unique) "empty clip" sound files in some form.
 
-
-    // This value is essentially the fire rate in SPR which should be a cutoff for weapons experiencing recoil inaccuracy. 
-    private const float RECOIL_DECAY_COEFF = 0.5f;
+    // Maximum angle in degrees which can be added to the inaccuracy by recoil.
     private const float RECOIL_CAP = 3f;
+    // How fast does recoil decay?
+    // For a recoilIncrement of 1, this is the fire rate in **RPS**, above which the weapon will slowly gain recoil as it fires
+    private const float RECOIL_DECAY_RATE = RECOIL_CAP / 0.5f;
 
     // Init
     // TODO This may be removable when testing is done
@@ -95,7 +96,7 @@ public class Weapon : MonoBehaviour
         if (recoil > 0)
         {
             // Decrement recoil over time
-            recoil -= Time.deltaTime * RecoilIncrement / Mathf.Min(FireRate, RECOIL_DECAY_COEFF);
+            recoil -= Time.deltaTime * RECOIL_DECAY_RATE;
         }
 
         if (recoil < 0)
