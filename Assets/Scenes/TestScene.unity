@@ -289,7 +289,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 63b285499050b284495855960337f343, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  primaryWeapon: {fileID: 645226512}
+  primaryWeapon: {fileID: 568977198}
   secondaryWeapon: {fileID: 0}
   killstreak: {fileID: 0}
   passive: {fileID: 0}
@@ -494,6 +494,11 @@ Transform:
   m_Father: {fileID: 336452331}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &568977198 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4881556697392494737, guid: c800f5a0f645517408dbd8b3f4b62611, type: 3}
+  m_PrefabInstance: {fileID: 648328857}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &608688178
 GameObject:
   m_ObjectHideFlags: 0
@@ -639,11 +644,6 @@ MonoBehaviour:
   lr: {fileID: 608688179}
   pc: {fileID: 336452332}
   mainCamera: {fileID: 519420031}
---- !u!1 &645226512 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6347404659596452707, guid: 1e58443c83cb8644fbce059f938f3b7a, type: 3}
-  m_PrefabInstance: {fileID: 221505803}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &648328857
 PrefabInstance:
   m_ObjectHideFlags: 0

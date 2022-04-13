@@ -42,8 +42,9 @@ public class PlayerController : MonoBehaviour
     private bool firing;
     private float timeToNextShot;
     private float movementAccuracyFactor;
+    public float MovementAccuracyFactor { get => movementAccuracyFactor; }
 
-    [SerializeField]
+    [SerializeField] 
     private bool hasKillstreak;
 
     // Input
@@ -143,13 +144,14 @@ public class PlayerController : MonoBehaviour
 
 
         // Fire weapon
+        // Movement and being in the air decrease accuracy (increases aim cone); crouching increases accuracy (shrinks aim cone)
+        // Needs to be calculated every frame so the crosshair size is accurate
+        movementAccuracyFactor = (MOVEMENT_AIM_COEFF * Mathf.Abs(horizontalInput)) + (AIR_AIM_COEFF * (!grounded ? 1 : 0)) - (CROUCH_AIM_COEFF * (crouching ? 1 : 0));
         // TODO do we want any burst-fire weapons? Might need a switch(Enum) in here if so
         if (firing)
         {
             if (timeToNextShot <= 0)
             {
-                // Movement and being in the air decrease accuracy (increases aim cone); crouching increases accuracy (shrinks aim cone)
-                movementAccuracyFactor = (MOVEMENT_AIM_COEFF * Mathf.Abs(horizontalInput)) + (AIR_AIM_COEFF * (!grounded ? 1 : 0)) - (CROUCH_AIM_COEFF * (crouching ? 1 : 0));
                 currentWeapon.Fire(facingRight, movementAccuracyFactor);
                 timeToNextShot = currentWeapon.FireRate;
 
@@ -174,7 +176,7 @@ public class PlayerController : MonoBehaviour
         // Update animations
         // Get mouse position info
         Vector3 mousePos = Input.mousePosition;
-        Vector3 screenPoint = Camera.main.WorldToScreenPoint(transform.localPosition);
+        Vector3 screenPoint = Camera.main.WorldToScreenPoint(currentWeapon.transform.position);
 
         // Flip sprite so the player always faces towards the mouse cursor
         if ((facingRight && mousePos.x < screenPoint.x) || (!facingRight && mousePos.x > screenPoint.x))
@@ -186,7 +188,6 @@ public class PlayerController : MonoBehaviour
         Vector2 offset = new Vector2(mousePos.x - screenPoint.x, mousePos.y - screenPoint.y) * (facingRight ? 1 : -1);
         float angle = Mathf.Atan2(offset.y, offset.x) * Mathf.Rad2Deg;
         currentWeapon.transform.rotation = Quaternion.Euler(0, 0, angle);
-
 
         // Crouching animation
         if (crouching)

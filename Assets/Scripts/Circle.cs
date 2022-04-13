@@ -28,7 +28,7 @@ public class Circle : MonoBehaviour
         // Please replace me with real UI code! I exist solely because *someone* couldn't be bothered to implement this properly while he did math.
         //
         // Get the mouse position
-        Vector3 mousePos = mainCamera.ScreenToWorldPoint(Input.mousePosition);
+        Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
         // Get the straight-line distance between the gun barrel and the mouse cursor
         Vector3 gunPos = gunBarrel.position;
@@ -43,7 +43,7 @@ public class Circle : MonoBehaviour
         //
 
         // TODO Get this value from the weapon and incorporate recoil + movement effects
-        float theta = 3 * Mathf.Deg2Rad; // weapon inaccuracy angle in degrees 
+        float theta = (pc.CurrentWeapon.FireConeAngle() + pc.MovementAccuracyFactor) * Mathf.Deg2Rad; // weapon inaccuracy angle in degrees 
         float tanTheta = Mathf.Tan(theta);
 
         // Standard-form coefficients of the line between the two points.

@@ -94,7 +94,7 @@ public class Weapon : MonoBehaviour
     {
         if (recoil > 0)
         {
-            // Decrement recoil slowly
+            // Decrement recoil over time
             recoil -= Time.deltaTime * RecoilIncrement * RECOIL_DECAY_COEFF;
         }
 
@@ -227,5 +227,11 @@ public class Weapon : MonoBehaviour
     public bool HasAmmo()
     {
         return currentMag > 0;
+    }
+
+
+    public float FireConeAngle()
+    {
+        return Accuracy + recoil;
     }
 }

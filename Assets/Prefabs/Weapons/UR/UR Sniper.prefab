@@ -136,7 +136,7 @@ MonoBehaviour:
   reloadTime: 0.6
   range: 100
   accuracy: 0
-  recoilIncrement: 0.15
+  recoilIncrement: 0.4
   damage: 80
   currentMag: 0
   reserveAmmo: 0
