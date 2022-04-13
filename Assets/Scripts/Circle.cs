@@ -29,6 +29,7 @@ public class Circle : MonoBehaviour
         //
         // Get the mouse position
         Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        mousePos = new Vector3(mousePos.x, mousePos.y, 0); // strip out the Z coord, since it doesn't matter for rendering but it will affect Euclidean distance if present
 
         // Get the straight-line distance between the gun barrel and the mouse cursor
         Vector3 gunPos = gunBarrel.position;
@@ -36,17 +37,17 @@ public class Circle : MonoBehaviour
 
         // Geometry is hell
         //
-        // Since we define the x-axis parallel to the line which passes through the gun barrel and the cursor position, we don't need to bother to account for differences in y-value,
+        // Since we define the x-axis parallel to the line which passes through the gun barrel and the cursor position, we don't need to bother to account for differences in world y-value,
         // and since we define the gun barrel to be at the origin, the mouse cursor is at (dist, 0) in the weird reference frame.
         // This makes the math *significantly* simpler to implement.
         // 
         //
 
-        // TODO Get this value from the weapon and incorporate recoil + movement effects
+        // Determine the angle of the tangent line from the horizontal
         float theta = (pc.CurrentWeapon.FireConeAngle() + pc.MovementAccuracyFactor) * Mathf.Deg2Rad; // weapon inaccuracy angle in degrees 
         float tanTheta = Mathf.Tan(theta);
 
-        // Standard-form coefficients of the line between the two points.
+        // Standard-form coefficients of the tangent line
         float A = 1;
         float B = -1 / tanTheta;
         float C = 0;

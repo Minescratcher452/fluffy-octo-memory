@@ -289,7 +289,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 63b285499050b284495855960337f343, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  primaryWeapon: {fileID: 568977198}
+  primaryWeapon: {fileID: 1982062870}
   secondaryWeapon: {fileID: 0}
   killstreak: {fileID: 0}
   passive: {fileID: 0}
@@ -494,11 +494,6 @@ Transform:
   m_Father: {fileID: 336452331}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &568977198 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4881556697392494737, guid: c800f5a0f645517408dbd8b3f4b62611, type: 3}
-  m_PrefabInstance: {fileID: 648328857}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &608688178
 GameObject:
   m_ObjectHideFlags: 0
@@ -2239,6 +2234,11 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1982062870 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5718189878470114247, guid: 37504539ee2cfd241a3c29bb0f5c0b99, type: 3}
+  m_PrefabInstance: {fileID: 1679162673130746237}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1679162673130746237
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2246,6 +2246,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 336452331}
     m_Modifications:
+    - target: {fileID: 5718189878470114242, guid: 37504539ee2cfd241a3c29bb0f5c0b99, type: 3}
+      propertyPath: recoilIncrement
+      value: 0.8
+      objectReference: {fileID: 0}
     - target: {fileID: 5718189878470114244, guid: 37504539ee2cfd241a3c29bb0f5c0b99, type: 3}
       propertyPath: m_RootOrder
       value: 5
