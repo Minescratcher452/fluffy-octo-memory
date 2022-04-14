@@ -65,6 +65,7 @@ public class PlayerController : MonoBehaviour
         // Init components
         playerRigidbody = GetComponent<Rigidbody2D>();
         currentWeapon = primaryWeapon.GetComponent<Weapon>();
+        isPrimaryCurrent = true;
 
         // Init input
 
