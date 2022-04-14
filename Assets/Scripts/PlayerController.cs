@@ -11,6 +11,7 @@ public class PlayerController : MonoBehaviour
     // Not a final list!
     public GameObject primaryWeapon;
     public GameObject secondaryWeapon;
+    private bool isPrimaryCurrent;
     public GameObject killstreak;
     public GameObject passive;
     // Slot for a primary-weapon specific gun mod (e.g. expanded clip, laser sight, corrosive rounds, etc)
@@ -43,12 +44,12 @@ public class PlayerController : MonoBehaviour
     private float movementAccuracyFactor;
     public float MovementAccuracyFactor { get => movementAccuracyFactor; }
 
-    [SerializeField] 
+    [SerializeField]
     private bool hasKillstreak;
 
     // Input
     float horizontalInput;
-    float speed; 
+    float speed;
 
     private const float BASE_SPEED = 10f;
     private const float MOVEMENT_AIM_COEFF = 1f;
@@ -170,7 +171,11 @@ public class PlayerController : MonoBehaviour
             timeToNextShot -= Time.deltaTime;
         }
 
-
+        // If the player's health <= 0, they're dead, kill them
+        if (health <= 0)
+        {
+            // TODO kill and respawn
+        }
 
         // Update animations
         // Get mouse position info
@@ -234,12 +239,23 @@ public class PlayerController : MonoBehaviour
     private void SwapWeapon()
     {
         Debug.Log("Swapped weapons!");
+        if (isPrimaryCurrent)
+        {
+            currentWeapon = secondaryWeapon.GetComponent<Weapon>();
+        }
+        else
+        {
+            currentWeapon = primaryWeapon.GetComponent<Weapon>();
+        }
+
+        isPrimaryCurrent = !isPrimaryCurrent;
     }
 
     private void Killstreak()
     {
         Debug.Log("Killstreak activated!");
         hasKillstreak = false;
+        // TODO implement killstreaks
     }
 
     private void FlipPlayerFacing()
@@ -249,5 +265,13 @@ public class PlayerController : MonoBehaviour
         Vector3 scale = transform.localScale;
         scale.x *= -1;
         transform.localScale = scale;
+    }
+
+    public void Damage(int damage, GameObject source)
+    {
+        health -= damage;
+        Debug.Log(this + " took " + damage + " damage! Health now " + health);
+
+        // TODO death messages (killing character + weapon used, special cases for blowing yourself up or for going OOB)
     }
 }
