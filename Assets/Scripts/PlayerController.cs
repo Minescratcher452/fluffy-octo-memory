@@ -51,11 +51,11 @@ public class PlayerController : MonoBehaviour
     float speed; 
 
     private const float BASE_SPEED = 10f;
-    private const float MOVEMENT_AIM_COEFF = 2f;
-    private const float CROUCH_SLOWDOWN = 0.8f;
+    private const float MOVEMENT_AIM_COEFF = 1f;
+    private const float CROUCH_SLOWDOWN = 0.5f;
     private const float CROUCH_AIM_COEFF = 1f;
     private const float AIR_SLOWDOWN = 0.7f;
-    private const float AIR_AIM_COEFF = 2f;
+    private const float AIR_AIM_COEFF = .5f;
     private const float JUMP_STRENGTH = 700f;
 
     // Start is called before the first frame update
