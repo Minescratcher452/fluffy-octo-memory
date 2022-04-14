@@ -73,9 +73,9 @@ public class Weapon : MonoBehaviour
 
     // Maximum angle in degrees which can be added to the inaccuracy by recoil.
     private const float RECOIL_CAP = 3f;
-    // How fast does recoil decay?
-    // For a recoilIncrement of 1, this is the fire rate in **RPS**, above which the weapon will slowly gain recoil as it fires
-    private const float RECOIL_DECAY_RATE = RECOIL_CAP / 0.5f;
+    // How fast does recoil decay, in units of degrees per second?
+    // For a recoilIncrement of 1, this is also the fire rate in **RPS**, above which the weapon will slowly gain recoil as it fires
+    private const float RECOIL_DECAY_RATE = RECOIL_CAP / 1f;
 
     // Init
     // TODO This may be removable when testing is done
@@ -172,7 +172,7 @@ public class Weapon : MonoBehaviour
 
     protected IEnumerator ShotEffect(LineRenderer lr)
     {
-        // Play the shooting sound effect
+        // TODO Play the shooting sound effect
 
         // Turn on the line renderer
         lr.enabled = true;

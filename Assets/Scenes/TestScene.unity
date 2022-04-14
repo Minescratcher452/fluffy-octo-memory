@@ -271,6 +271,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: UR AR
       objectReference: {fileID: 0}
+    - target: {fileID: 6347404659596452710, guid: 1e58443c83cb8644fbce059f938f3b7a, type: 3}
+      propertyPath: fireRate
+      value: 0.15
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1e58443c83cb8644fbce059f938f3b7a, type: 3}
 --- !u!1 &221505804 stripped

@@ -774,7 +774,7 @@ MonoBehaviour:
   magazineSize: 30
   numMagazines: 4
   fullAuto: 1
-  fireRate: 0.18
+  fireRate: 0.167
   reloadTime: 0.3
   range: 30
   accuracy: 3
