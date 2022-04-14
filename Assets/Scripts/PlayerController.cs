@@ -8,7 +8,6 @@ public class PlayerController : MonoBehaviour
     private Rigidbody2D playerRigidbody;
 
     // Equipment
-    // TODO Remember to change these to classes!
     // Not a final list!
     public GameObject primaryWeapon;
     public GameObject secondaryWeapon;
