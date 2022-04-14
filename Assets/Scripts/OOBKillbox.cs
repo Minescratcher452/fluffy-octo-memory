@@ -5,7 +5,7 @@ using UnityEngine;
 public class OOBKillbox : MonoBehaviour
 {
     public BoxCollider2D bc;
-    private Color gizmoColor = Color.cyan;
+    private Color gizmoColor = Color.green;
 
     void OnTriggerExit2D(Collider2D other)
     {
